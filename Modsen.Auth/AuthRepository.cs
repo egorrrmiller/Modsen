@@ -28,8 +28,7 @@ public class AuthRepository : IAuthRepository
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, user.Email),
-            new("password", user.Password)
+            new(ClaimTypes.Email, user.Email)
         };
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
