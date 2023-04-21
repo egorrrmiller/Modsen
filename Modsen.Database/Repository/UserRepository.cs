@@ -15,23 +15,23 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<UserDto?> GetUser(string email, string password)
+    public async Task<UserDto?> GetUser(string email, string password, CancellationToken cancellationToken)
     {
         var user = await _context.Users.FirstOrDefaultAsync(
-            user => user.Email.Equals(email) && user.Password.Equals(password));
+            user => user.Email.Equals(email) && user.Password.Equals(password), cancellationToken);
 
         return user == null ? null : new UserDto(user.Email, user.Password);
     }
 
-    public async Task<UserModel> RegisterUser(UserDto userDto)
+    public async Task<UserModel> RegisterUser(UserDto userDto, CancellationToken cancellationToken)
     {
         var user = await _context.Users.AddAsync(new UserModel
         {
             Email = userDto.Email,
             Password = userDto.Password
-        });
+        }, cancellationToken);
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
         return user.Entity;
     }

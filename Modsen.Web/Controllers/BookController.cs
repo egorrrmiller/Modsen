@@ -18,15 +18,15 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("/getBooks")]
-    public async Task<IActionResult> GetBooks()
+    public async Task<IActionResult> GetBooks(CancellationToken cancellationToken)
     {
-        return Ok(await _bookRepository.GetBooks());
+        return Ok(await _bookRepository.GetBooks(cancellationToken));
     }
 
     [HttpGet("/getBook")]
-    public async Task<IActionResult> GetBook(Guid? id, string? isbn)
+    public async Task<IActionResult> GetBook(Guid? id, string? isbn, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetBook(id, isbn);
+        var book = await _bookRepository.GetBook(cancellationToken, id, isbn);
 
         if (book == null)
             return NotFound("Книга не найдена");
@@ -35,17 +35,17 @@ public class BookController : ControllerBase
     }
 
     [HttpPost("/addBook")]
-    public async Task<IActionResult> AddBook(BookDto bookDto)
+    public async Task<IActionResult> AddBook(BookDto bookDto, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.AddBook(bookDto);
+        var book = await _bookRepository.AddBook(bookDto, cancellationToken);
 
         return Ok(book);
     }
 
     [HttpPut("/updateBook")]
-    public async Task<IActionResult> UpdateBook(BookDto bookDto)
+    public async Task<IActionResult> UpdateBook(BookDto bookDto, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.UpdateBook(bookDto);
+        var book = await _bookRepository.UpdateBook(bookDto, cancellationToken);
         if (book == null)
             return NotFound("Книга не найдена");
 
@@ -53,9 +53,9 @@ public class BookController : ControllerBase
     }
 
     [HttpDelete("/deleteBook")]
-    public async Task<IActionResult> DeleteBook(Guid? id, string? isbn)
+    public async Task<IActionResult> DeleteBook(Guid? id, string? isbn, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.DeleteBook(id, isbn);
+        var book = await _bookRepository.DeleteBook(cancellationToken, id, isbn);
         if (book == null)
             return NotFound("Книга не найдена");
 

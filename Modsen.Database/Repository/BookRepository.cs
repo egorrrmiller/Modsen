@@ -20,46 +20,48 @@ public class BookRepository : IBookRepository
         _mapper = mapper;
     }
 
-    public async Task<BookModel?> AddBook(BookDto bookDto)
+    public async Task<BookModel?> AddBook(BookDto bookDto, CancellationToken cancellationToken)
     {
-        var book = await _context.Books.FindAsync(bookDto.Isbn);
-        
+        var book = await _context.Books.FindAsync(new object?[] { bookDto.Isbn }, cancellationToken);
+
         if (book != null)
             throw new BookExistsException("Книга с таким ISBN уже есть");
 
         book = bookDto.MapToModel(_mapper);
-        var entity = await _context.Books.AddAsync(book);
-        await _context.SaveChangesAsync();
+        var entity = await _context.Books.AddAsync(book!, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Entity;
     }
 
-    public async Task<List<BookModel>> GetBooks()
+    public async Task<List<BookModel>> GetBooks(CancellationToken cancellationToken)
     {
-        return await _context.Books.AsNoTracking().ToListAsync();
+        return await _context.Books.AsNoTracking().ToListAsync(cancellationToken);
     }
 
-    public async Task<BookDto?> GetBook(Guid? id = null, string? isbn = null)
+    public async Task<BookDto?> GetBook(CancellationToken cancellationToken, Guid? id = null, string? isbn = null)
     {
         var books = _context.Books;
-        var book  = await books.FindAsync(id) ?? await books.FindAsync(isbn);
+        var book = await books.FindAsync(new object?[] { id }, cancellationToken) ??
+                   await books.FindAsync(new object?[] { isbn }, cancellationToken);
 
         return book?.MapToDto(_mapper);
     }
 
-    public async Task<BookDto?> UpdateBook(BookDto bookDto)
+    public async Task<BookDto?> UpdateBook(BookDto bookDto, CancellationToken cancellationToken)
     {
-        var book = await _context.Books.FindAsync(bookDto.Isbn);
+        var book = await _context.Books.FindAsync(new object?[] { bookDto.Isbn }, cancellationToken);
+
         if (book == null)
             return null;
 
         var entity = _context.Books.Update(bookDto.MapToModel(_mapper));
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Entity.MapToDto(_mapper);
     }
 
-    public async Task<BookDto?> DeleteBook(Guid? id = null, string? isbn = null)
+    public async Task<BookDto?> DeleteBook(CancellationToken cancellationToken, Guid? id = null, string? isbn = null)
     {
         var books = _context.Books;
         var book  = await books.FindAsync(id) ?? await books.FindAsync(isbn);
@@ -68,7 +70,7 @@ public class BookRepository : IBookRepository
             return null;
 
         var entity = _context.Books.Remove(book);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Entity.MapToDto(_mapper);
     }

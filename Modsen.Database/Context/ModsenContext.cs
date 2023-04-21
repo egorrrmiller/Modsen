@@ -6,7 +6,6 @@ namespace Modsen.Database.Context;
 
 public class ModsenContext : DbContext
 {
-
     public ModsenContext(DbContextOptions<ModsenContext> options) : base(options)
     {
         Database.EnsureCreated();

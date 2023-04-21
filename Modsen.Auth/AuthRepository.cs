@@ -20,9 +20,9 @@ public class AuthRepository : IAuthRepository
         _configuration = configuration;
     }
 
-    public async Task<string?> GetUserToken(string email, string password)
+    public async Task<string?> GetUserToken(string email, string password, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUser(email, password);
+        var user = await _userRepository.GetUser(email, password, cancellationToken);
         if (user == null)
             return null;
 
@@ -31,7 +31,8 @@ public class AuthRepository : IAuthRepository
             new(ClaimTypes.Email, user.Email)
         };
 
-        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
+        var signingKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? string.Empty));
 
         var jwt = new JwtSecurityToken(
             _configuration["Jwt:Issuer"],
@@ -44,9 +45,9 @@ public class AuthRepository : IAuthRepository
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 
-    public async Task<UserDto> RegisterUser(string email, string password)
+    public async Task<UserDto> RegisterUser(string email, string password, CancellationToken cancellationToken)
     {
-        var result = await _userRepository.RegisterUser(new UserDto(email, password));
+        var result = await _userRepository.RegisterUser(new UserDto(email, password), cancellationToken);
 
         return new UserDto(result.Email, result.Password);
     }

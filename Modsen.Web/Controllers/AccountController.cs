@@ -16,9 +16,9 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("getToken")]
-    public async Task<IActionResult> GetToken(string email, string password)
+    public async Task<IActionResult> GetToken(string email, string password, CancellationToken cancellationToken)
     {
-        var token = await _auth.GetUserToken(email, password);
+        var token = await _auth.GetUserToken(email, password, cancellationToken);
         if (token == null)
             return NotFound("Пользователь не найден.");
 
@@ -26,9 +26,9 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser(UserDto userDto)
+    public async Task<IActionResult> RegisterUser(UserDto userDto, CancellationToken cancellationToken)
     {
-        var user = await _auth.RegisterUser(userDto.Email, userDto.Password);
+        var user = await _auth.RegisterUser(userDto.Email, userDto.Password, cancellationToken);
 
         return Ok(user);
     }
