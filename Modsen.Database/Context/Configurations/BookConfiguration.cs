@@ -11,7 +11,6 @@ public class BookConfiguration : IEntityTypeConfiguration<BookModel>
         builder.HasKey(key => key.Id);
 
         builder.Property(isbn => isbn.Isbn).IsRequired().HasMaxLength(17);
-        builder.HasAlternateKey(isbn => isbn.Isbn);
 
         builder.Property(title => title.Title).IsRequired().HasMaxLength(30);
         builder.Property(desc => desc.Description).HasMaxLength(200);

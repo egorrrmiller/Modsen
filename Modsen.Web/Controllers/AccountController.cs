@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Modsen.Auth.Interfaces;
+using Modsen.Database.Repository.Interfaces;
 using Modsen.Domain.Dto;
 
 namespace Modsen.Web.Controllers;
@@ -8,17 +9,21 @@ namespace Modsen.Web.Controllers;
 [Route("[controller]")]
 public class AccountController : ControllerBase
 {
-    private readonly IAuthRepository _auth;
+    private readonly IAuthRepository _authRepository;
+    private readonly IUserRepository _userRepository;
 
-    public AccountController(IAuthRepository auth)
+    public AccountController(IAuthRepository authRepository, IUserRepository userRepository)
     {
-        _auth = auth;
+        _authRepository = authRepository;
+        _userRepository = userRepository;
     }
 
     [HttpGet("getToken")]
-    public async Task<IActionResult> GetToken(string email, string password, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetToken([FromQuery]UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var token = await _auth.GetUserToken(email, password, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        var token = await _authRepository.GetUserTokenAsync(userDto, cancellationToken);
         if (token == null)
             return NotFound("Пользователь не найден.");
 
@@ -26,9 +31,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser(UserDto userDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterUser(UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var user = await _auth.RegisterUser(userDto.Email, userDto.Password, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        var user = await _userRepository.RegisterUserAsync(userDto, cancellationToken);
 
         return Ok(user);
     }

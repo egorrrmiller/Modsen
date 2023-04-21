@@ -1,8 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Modsen.Auth.Interfaces;
 using Modsen.Database.Repository.Interfaces;
 using Modsen.Domain.Dto;
@@ -11,18 +7,20 @@ namespace Modsen.Auth;
 
 public class AuthRepository : IAuthRepository
 {
-    private readonly IConfiguration _configuration;
+    private readonly IGenerateToken _generateToken;
     private readonly IUserRepository _userRepository;
 
-    public AuthRepository(IUserRepository userRepository, IConfiguration configuration)
+    public AuthRepository(IUserRepository userRepository, IGenerateToken generateToken)
     {
         _userRepository = userRepository;
-        _configuration = configuration;
+        _generateToken = generateToken;
     }
 
-    public async Task<string?> GetUserToken(string email, string password, CancellationToken cancellationToken)
+    public async Task<string?> GetUserTokenAsync(UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var user = await _userRepository.GetUser(email, password, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        var user = await _userRepository.GetUserAsync(userDto, cancellationToken);
         if (user == null)
             return null;
 
@@ -30,25 +28,8 @@ public class AuthRepository : IAuthRepository
         {
             new(ClaimTypes.Email, user.Email)
         };
+        var token = await _generateToken.GenerateTokenAsync(claims);
 
-        var signingKey =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? string.Empty));
-
-        var jwt = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.Add(TimeSpan.FromHours(1)),
-            notBefore: DateTime.Now,
-            signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
-
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
-    }
-
-    public async Task<UserDto> RegisterUser(string email, string password, CancellationToken cancellationToken)
-    {
-        var result = await _userRepository.RegisterUser(new UserDto(email, password), cancellationToken);
-
-        return new UserDto(result.Email, result.Password);
+        return token;
     }
 }

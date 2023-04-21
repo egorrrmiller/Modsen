@@ -5,9 +5,9 @@ namespace Modsen.Database.Repository.Interfaces;
 
 public interface IBookRepository
 {
-    Task<BookModel?> AddBook(BookDto bookDto, CancellationToken cancellationToken);
-    Task<List<BookModel>> GetBooks(CancellationToken cancellationToken);
-    Task<BookDto?> GetBook(CancellationToken cancellationToken, Guid? id = null, string? isbn = null);
-    Task<BookDto?> UpdateBook(BookDto bookDto, CancellationToken cancellationToken);
-    Task<BookDto?> DeleteBook(CancellationToken cancellationToken, Guid? id = null, string? isbn = null);
+    Task<BookModel?> AddBookAsync(BookDto bookDto, CancellationToken cancellationToken = default);
+    List<BookModel> GetBooks();
+    Task<BookDto?> GetBookAsync(Guid? id = null, string? isbn = null, CancellationToken cancellationToken = default);
+    Task<BookDto?> UpdateBookAsync(Guid id, BookDto bookDto, CancellationToken cancellationToken = default);
+    Task<BookDto?> DeleteBookAsync(Guid? id = null, string? isbn = null, CancellationToken cancellationToken = default);
 }

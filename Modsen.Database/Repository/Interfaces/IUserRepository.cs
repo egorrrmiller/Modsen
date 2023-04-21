@@ -5,6 +5,6 @@ namespace Modsen.Database.Repository.Interfaces;
 
 public interface IUserRepository
 {
-    Task<UserDto?> GetUser(string email, string password, CancellationToken cancellationToken);
-    Task<UserModel> RegisterUser(UserDto user, CancellationToken cancellationToken);
+    Task<UserDto?> GetUserAsync(UserDto userDto, CancellationToken cancellationToken = default);
+    Task<UserModel> RegisterUserAsync(UserDto userDto, CancellationToken cancellationToken = default);
 }
