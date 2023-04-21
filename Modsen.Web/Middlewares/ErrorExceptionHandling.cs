@@ -31,6 +31,7 @@ public class ErrorExceptionHandling
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             await HandleExceptionAsync(context,
                 e.Message,
                 HttpStatusCode.InternalServerError,

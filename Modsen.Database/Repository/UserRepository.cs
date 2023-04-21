@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Modsen.Database.Context;
 using Modsen.Database.Repository.Interfaces;
+using Modsen.Domain.Dto;
 using Modsen.Domain.Models;
 
 namespace Modsen.Database.Repository;
@@ -13,25 +15,24 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<bool> AddUser(string email, string password)
+    public async Task<UserDto?> GetUser(string email, string password)
     {
-        var user = await _context.Users.FindAsync(email);
-        
-        if (user == null) 
-            return false;
-        
-        await _context.Users.AddAsync(new UserModel()
-        {
-            Email = email,
-            Password = password
-        });
-        await _context.SaveChangesAsync();
+        var user = await _context.Users.FirstOrDefaultAsync(
+            user => user.Email.Equals(email) && user.Password.Equals(password));
 
-        return true;
+        return user == null ? null : new UserDto(user.Email, user.Password);
     }
 
-    public async Task<UserModel?> GetUser(string email)
+    public async Task<UserModel> RegisterUser(UserDto userDto)
     {
-        return await _context.Users.FindAsync(email);
+        var user = await _context.Users.AddAsync(new UserModel
+        {
+            Email = userDto.Email,
+            Password = userDto.Password
+        });
+
+        await _context.SaveChangesAsync();
+
+        return user.Entity;
     }
 }

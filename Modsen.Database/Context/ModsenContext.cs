@@ -17,15 +17,16 @@ public class ModsenContext : DbContext
     public DbSet<BookModel> Books { get; set; }
     public DbSet<UserModel> Users { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("User ID=postgres;Password=123452;Host=localhost;Port=5432;Database=modsen;");
+        optionsBuilder.UseSqlite("Data Source = modsen.db");
         base.OnConfiguring(optionsBuilder);
-    }*/
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new BookConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }

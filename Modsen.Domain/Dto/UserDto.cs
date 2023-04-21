@@ -1,5 +1,3 @@
 namespace Modsen.Domain.Dto;
 
-public class UserDto
-{
-}
+public record UserDto(string Email, string Password);

@@ -35,7 +35,7 @@ public class BookRepository : IBookRepository
 
     public async Task<List<BookModel>> GetBooks()
     {
-        return await _context.Books.ToListAsync();
+        return await _context.Books.AsNoTracking().ToListAsync();
     }
 
     public async Task<BookDto?> GetBook(Guid? id = null, string? isbn = null)

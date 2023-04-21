@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1" />
+        <PackageReference Include="AutoMapper" Version="12.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Modsen.Domain\Modsen.Domain.csproj" />
+        <ProjectReference Include="..\Modsen.Domain\Modsen.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

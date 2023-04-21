@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modsen.Database.Repository.Interfaces;
 using Modsen.Domain.Dto;
@@ -5,6 +6,7 @@ using Modsen.Domain.Dto;
 namespace Modsen.Web.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class BookController : ControllerBase
 {
