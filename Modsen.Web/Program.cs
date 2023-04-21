@@ -14,7 +14,7 @@ using Modsen.Web.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ModsenContext>(opt =>
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Sqlite")));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
 builder.Services.AddAutoMapper(typeof(AppMappingProfile));
 
