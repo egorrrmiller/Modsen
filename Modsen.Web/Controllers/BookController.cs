@@ -39,9 +39,6 @@ public class BookController : ControllerBase
     {
         var book = await _bookRepository.AddBook(bookDto);
 
-        if (book == null)
-            return BadRequest("Книга с таким ISBN уже есть");
-
         return Ok(book);
     }
 

@@ -26,7 +26,7 @@ public class ErrorExceptionHandling
         {
             await HandleExceptionAsync(context,
                 e.Message,
-                HttpStatusCode.BadRequest,
+                HttpStatusCode.UnprocessableEntity,
                 e.Message);
         }
         catch (Exception e)

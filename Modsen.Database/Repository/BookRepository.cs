@@ -23,6 +23,7 @@ public class BookRepository : IBookRepository
     public async Task<BookModel?> AddBook(BookDto bookDto)
     {
         var book = await _context.Books.FindAsync(bookDto.Isbn);
+        
         if (book != null)
             throw new BookExistsException("Книга с таким ISBN уже есть");
 
