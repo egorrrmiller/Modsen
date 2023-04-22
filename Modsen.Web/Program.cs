@@ -23,11 +23,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IGenerateToken, GenerateToken>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
-var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptionsModel>();
+var jwtOptions = builder.Configuration.GetSection("Jwt")
+    .Get<JwtOptionsModel>();
 
 builder.Services.AddAuthenticationWithJwtBearer(jwtOptions);
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerWithJwtSecurity();

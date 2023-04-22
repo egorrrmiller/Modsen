@@ -9,8 +9,13 @@ public class UserConfiguration : IEntityTypeConfiguration<UserModel>
     public void Configure(EntityTypeBuilder<UserModel> builder)
     {
         builder.HasKey(email => email.Email);
-        builder.Property(email => email.Email).IsRequired().HasMaxLength(30);
 
-        builder.Property(pass => pass.Password).IsRequired().HasMaxLength(30);
+        builder.Property(email => email.Email)
+            .IsRequired()
+            .HasMaxLength(30);
+
+        builder.Property(pass => pass.Password)
+            .IsRequired()
+            .HasMaxLength(30);
     }
 }

@@ -32,6 +32,7 @@ public class ErrorExceptionHandling
         catch (Exception e)
         {
             Console.WriteLine(e);
+
             await HandleExceptionAsync(context,
                 e.Message,
                 HttpStatusCode.InternalServerError,
@@ -40,17 +41,17 @@ public class ErrorExceptionHandling
     }
 
     private async Task HandleExceptionAsync(HttpContext context, string exMsg, HttpStatusCode httpStatusCode,
-        string message)
+                                            string message)
     {
         _logger.LogError(exMsg);
 
         var response = context.Response;
         response.ContentType = "application/json";
-        response.StatusCode = (int)httpStatusCode;
+        response.StatusCode = (int) httpStatusCode;
 
         var errorDto = new ErrorDto
         {
-            StatusCode = (int)httpStatusCode,
+            StatusCode = (int) httpStatusCode,
             Message = message
         };
 

@@ -6,8 +6,5 @@ namespace Modsen.Mapper.Extensions;
 
 public static class MapToDtoExtension
 {
-    public static BookDto MapToDto(this BookModel? bookModel, IMapper mapper)
-    {
-        return mapper.Map<BookDto>(bookModel);
-    }
+    public static BookDto MapToDto(this BookModel? bookModel, IMapper mapper) => mapper.Map<BookDto>(bookModel);
 }

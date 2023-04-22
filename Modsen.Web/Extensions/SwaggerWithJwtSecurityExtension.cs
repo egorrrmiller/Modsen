@@ -11,7 +11,7 @@ public static class SwaggerWithJwtSecurityExtension
 
         return collection.AddSwaggerGen(swagger =>
         {
-            swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            swagger.AddSecurityDefinition("Bearer", new()
             {
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
@@ -20,12 +20,13 @@ public static class SwaggerWithJwtSecurityExtension
                 In = ParameterLocation.Header,
                 Description = description
             });
-            swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+            swagger.AddSecurityRequirement(new()
             {
                 {
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference
+                        Reference = new()
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"

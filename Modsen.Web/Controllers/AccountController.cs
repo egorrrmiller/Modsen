@@ -10,6 +10,7 @@ namespace Modsen.Web.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAuthRepository _authRepository;
+
     private readonly IUserRepository _userRepository;
 
     public AccountController(IAuthRepository authRepository, IUserRepository userRepository)
@@ -19,13 +20,17 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("getToken")]
-    public async Task<IActionResult> GetToken([FromQuery]UserDto userDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetToken([FromQuery] UserDto userDto,
+                                              CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         var token = await _authRepository.GetUserTokenAsync(userDto, cancellationToken);
+
         if (token == null)
+        {
             return NotFound("Пользователь не найден.");
+        }
 
         return Ok(token);
     }
@@ -34,7 +39,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RegisterUser(UserDto userDto, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         var user = await _userRepository.RegisterUserAsync(userDto, cancellationToken);
 
         return Ok(user);

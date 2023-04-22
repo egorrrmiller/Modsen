@@ -6,8 +6,6 @@ namespace Modsen.Mapper;
 
 public class AppMappingProfile : Profile
 {
-    public AppMappingProfile()
-    {
-        CreateMap<BookModel, BookDto>().ReverseMap();
-    }
+    public AppMappingProfile() => CreateMap<BookModel, BookDto>()
+        .ReverseMap();
 }

@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Modsen.Database\Modsen.Database.csproj" />
-        <ProjectReference Include="..\Modsen.Domain\Modsen.Domain.csproj" />
+        <ProjectReference Include="..\Modsen.Database\Modsen.Database.csproj"/>
+        <ProjectReference Include="..\Modsen.Domain\Modsen.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JWT" Version="10.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+        <PackageReference Include="JWT" Version="10.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5"/>
     </ItemGroup>
 
 </Project>
